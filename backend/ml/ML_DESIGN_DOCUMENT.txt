@@ -1,0 +1,266 @@
+"""
+Career Recommendation System - ML Design Document
+
+University Diploma Project
+ML Architecture: Similarity-Based Recommendation Engine
+
+This document outlines the redesigned ML approach transitioning from:
+  ❌ Multi-class RandomForest Classification (80 labels, small dataset)
+  ✅ Similarity-Based Ranking (Feature-Vector Matching)
+
+Author: ML Engineering Team
+Date: 2024-2026
+"""
+
+# ============================================================================
+# PART 1: DESIGN OVERVIEW
+# ============================================================================
+
+"""
+PROBLEM STATEMENT:
+  - Current approach: RandomForest classifies each quiz answer as one of 80 careers
+  - Issue: With only ~80 training samples for 80 classes, model overfits and
+    recommends generic careers (Consultant, Project Manager, Sales Manager)
+  - Reason: Each class has ~1 sample on average → severe data sparsity
+
+SOLUTION: Similarity-Based Recommendation Engine
+
+CORE IDEA:
+  1. Define 80+ careers by FEATURE VECTORS (not just labels)
+  2. Extract user preferences/abilities as FEATURE VECTOR from quiz
+  3. Compute similarity (cosine distance) between user and each career
+  4. Rank careers by similarity score → top-5
+  5. Generate explanations by comparing feature alignment
+
+WHY THIS WORKS:
+  ✓ Doesn't require labeled training data for each career
+  ✓ Leverages domain knowledge (career characteristics)
+  ✓ Scalable: Easy to add new careers
+  ✓ Interpretable: Explain recommendations by feature comparison
+  ✓ Robust: Works with small quiz datasets
+"""
+
+# ============================================================================
+# PART 2: FEATURE SPACE DESIGN
+# ============================================================================
+
+"""
+USER & CAREER FEATURE VECTORS: 15-dimensional space
+
+FEATURE DIMENSIONS:
+1.  logical_thinking       [0-10]  Pattern recognition, analytical skills
+2.  creativity            [0-10]  Originality, innovation, artistic ability
+3.  communication         [0-10]  Presentation, negotiation, verbal skills
+4.  problem_solving       [0-10]  Troubleshooting, debugging, research
+5.  teamwork              [0-10]  Collaboration, group projects, cooperation
+6.  leadership            [0-10]  Decision-making, management, mentoring
+7.  math_quantitative     [0-10]  Numerical reasoning, calculus, statistics
+8.  english_writing       [0-10]  Language fluency, writing, comprehension
+9.  science_technical     [0-10]  Physics, chemistry, experimental thinking
+10. art_visual_design     [0-10]  Aesthetics, design, visual thinking
+11. tech_affinity         [0-10]  Programming, software, technical systems
+12. business_acumen       [0-10]  Finance, strategy, organizational thinking
+13. social_interaction    [0-10]  Empathy, interpersonal skills, customer focus
+14. independence          [0-10]  Self-direction, autonomy, self-motivation
+15. work_life_commitment  [0-10]  Work-life balance interest vs. career intensity
+
+QUIZ MAPPING TO FEATURES:
+  19 Quiz questions → 15 features (many-to-many mapping)
+  
+  Example:
+    Q1: "Rate logical thinking" → +1 to feature 1
+    Q2: "Rate creativity" → +1 to feature 2
+    Q3: "Rate communication" → +1 to feature 3
+    ... (questions 4-6 aggregate multiple features)
+    Q7-10: Academic strength (weighted to features 7-9)
+    Q11-14: Interests (weighted to features 11-13)
+    Q15-19: Work style (weighted to features 1,5,14,15)
+
+NORMALIZATION: All features scaled to [0, 10] range
+"""
+
+# ============================================================================
+# PART 3: CAREER DATASET SCHEMA
+# ============================================================================
+
+"""
+CAREER DATABASE STRUCTURE:
+
+Each career record contains:
+{
+  "id": "unique_identifier",
+  "name": "Career Title",
+  "description": "Brief description of the career",
+  "salary_range": "Entry-level statistics",
+  "job_market": "Growth outlook",
+  
+  # Feature vector (learned from domain expertise, not data)
+  "features": {
+    "logical_thinking": 8.5,
+    "creativity": 6.0,
+    "communication": 7.5,
+    ... (all 15 features)
+  },
+  
+  # Explanation: What makes someone suited for this career
+  "feature_highlights": {
+    "high": ["logical_thinking", "problem_solving"],   # Strengths
+    "required": ["communication", "teamwork"],          # Must-haves
+    "moderate": ["creativity"],                         # Nice-to-have
+  },
+  
+  "typical_path": "Bachelor's in CS, 2-3 years experience",
+  "similar_careers": ["Software Architect", "DevOps Engineer"],
+}
+
+CAREER EXAMPLES (80+ careers):
+  Technology: Software Engineer, Data Scientist, DevOps, UX Designer, ...
+  Business: Management Consultant, Financial Analyst, Product Manager, ...
+  Creative: Graphic Designer, Video Producer, Content Writer, ...
+  Science: Research Scientist, Biomedical Engineer, Environmental Scientist, ...
+  Social: Teacher, Counselor, Social Worker, Healthcare Provider, ...
+  ... (80+ total)
+"""
+
+# ============================================================================
+# PART 4: ALGORITHM STEPS
+# ============================================================================
+
+"""
+RECOMMENDATION ENGINE WORKFLOW:
+
+Step 1: User Quiz Input
+  Input: 19 questions with answers [1-10]
+  ├─ 3 logic questions
+  ├─ 3 creativity questions
+  ├─ 3 communication questions
+  ├─ 4 academic questions
+  ├─ 4 interest questions
+  └─ 2 work-style questions
+
+Step 2: User Feature Extraction
+  User Feature Vector U = [f₁, f₂, ..., f₁₅]
+  
+  Aggregation: Average scores from related quiz questions
+  Example:
+    f_logical_thinking = mean(Q1, Q2, Q3) + weighted(Q18, Q19)
+    f_creativity = mean(Q4, Q5, Q6)
+    ...
+  
+  Normalization: Scale all features to [0-10] range
+
+Step 3: Career Similarity Scoring
+  For each career C with feature vector: C = [c₁, c₂, ..., c₁₅]
+  
+  Cosine Similarity Score:
+    similarity(U, C) = (U · C) / (||U|| × ||C||)
+    
+    Where:
+    - U · C = sum of element-wise products
+    - ||U|| = L2 norm (sqrt of sum of squares)
+    - Result: -1 to +1 (typically 0.4 to 0.95 for careers)
+  
+  Compatibility Score (0-100%):
+    compatibility = max(0, similarity * 100)
+
+Step 4: Top-5 Ranking
+  Sort all 80+ careers by similarity score
+  Select top 5
+  Include: career name, score, explanation
+
+Step 5: Explanation Generation
+  For 1st career (highest match):
+  "Software Engineer is your best match (92% compatibility) because:
+    + Strong match: logical_thinking (9.2/10 vs career requirement 8.5)
+    + Strong match: problem_solving (8.8 vs 8.0)
+    ⚠ Area to develop: communication (5.0 vs career average 7.5)
+    + Good alignment: tech_affinity (9.5 vs 9.0)"
+"""
+
+# ============================================================================
+# PART 5: ADVANTAGES OF THIS APPROACH
+# ============================================================================
+
+"""
+VS. MULTI-CLASS CLASSIFICATION:
+
+1. DATA EFFICIENCY:
+   ✗ Classification: Needs labeled samples for each career
+   ✓ Similarity: Uses domain knowledge (career feature vectors)
+             No training data needed per career
+
+2. SCALABILITY:
+   ✗ Classification: Adding careers = retraining entire model
+   ✓ Similarity: Adding careers = add 1 feature vector (instant)
+
+3. INTERPRETABILITY:
+   ✗ Classification: "Black box" - why was career recommended?
+   ✓ Similarity: "Feature X matches, feature Y needs work"
+
+4. ROBUSTNESS:
+   ✗ Classification: Overfits with 80 samples ÷ 80 classes
+   ✓ Similarity: Works with any dataset size
+
+5. DIVERSITY:
+   ✗ Classification: Top-5 are often similar (all from same cluster)
+   ✓ Similarity: Top-5 span different domains (better variety)
+
+6. COLD START:
+   ✗ Classification: New user = random guessing
+   ✓ Similarity: New user = immediate reasonable recommendations
+"""
+
+# ============================================================================
+# PART 6: IMPLEMENTATION DETAILS
+# ============================================================================
+
+"""
+TECH STACK:
+  - NumPy: Vector operations
+  - Pandas: Data handling
+  - Scikit-learn: StandardScaler, cosine_similarity
+  - Python 3.8+
+
+KEY COMPONENTS:
+  1. CareerDatabase: JSON-based career feature vectors
+  2. UserFeatureExtractor: Quiz → User feature vector
+  3. RecommendationEngine: Similarity matching & ranking
+  4. ExplanationGenerator: Human-readable outputs
+  
+FILES:
+  - ml_recommendation_system.py (main engine)
+  - careers_dataset.json (80+ careers with features)
+  - inference.py (updated Django integration)
+"""
+
+# ============================================================================
+# PART 7: FUTURE IMPROVEMENTS
+# ============================================================================
+
+"""
+SHORT-TERM (Next 3-6 months):
+  1. A/B test: Collect user feedback on recommendations
+  2. Refine career feature vectors based on feedback
+  3. Analyze which features matter most (feature importance)
+  4. Add career specializations (e.g., Frontend vs Backend Engineer)
+
+MID-TERM (6-12 months):
+  1. Incorporate user industry preferences (filter before similarity)
+  2. Weight features by user importance (e.g., salary priority)
+  3. Add constraint-based filtering (min salary, work location)
+  4. Implement hybrid model: similarity + light ML ranking
+
+LONG-TERM (1+ year):
+  1. Collect training data on actual user career choices
+  2. Train ML model to predict career success given user profile
+  3. Implement collaborative filtering (users like you chose...)
+  4. Add job market trends (dynamically adjust career appeal)
+  5. Multi-objective optimization (balance 3-5 goals)
+
+DATA COLLECTION STRATEGY:
+  - Track: User → Recommendation → Career choice (feedback loop)
+  - Survey: "How accurate was recommendation?" (satisfaction)
+  - Job boards: Track if recommended careers are actually in-demand
+"""
+
+print(__doc__)

@@ -1,0 +1,70 @@
+logical_thinking,creativity,communication,problem_solving,teamwork,leadership,math_score,english_score,science_score,art_score,interest_tech,interest_business,interest_creativity,interest_social,work_style_independent,work_style_collaborative,career
+9,4,5,8,4,3,88,75,92,45,1,0,0,0,1,0,Software Developer
+8,6,7,7,6,5,85,80,85,60,1,0,0,0,0,1,Software Developer
+9,5,6,8,5,4,92,78,95,50,1,0,0,0,1,0,Software Developer
+10,3,4,9,3,2,95,70,98,35,1,0,0,0,1,0,Software Developer
+8,7,8,7,7,6,82,85,80,75,0,0,1,1,0,1,Graphic Designer
+7,9,7,6,7,6,75,82,72,92,0,0,1,1,0,1,Graphic Designer
+9,8,6,8,6,5,88,78,85,85,0,0,1,0,1,0,Graphic Designer
+8,8,7,7,7,6,80,80,78,90,0,0,1,1,0,1,Graphic Designer
+6,5,9,6,9,8,72,92,70,75,0,1,0,1,0,1,Business Manager
+7,6,9,7,8,8,78,90,75,70,0,1,0,1,0,1,Business Manager
+5,4,10,5,9,9,70,95,68,60,0,1,0,1,0,1,Business Manager
+6,7,9,6,8,7,75,88,72,75,0,1,0,1,0,1,Business Manager
+7,6,10,7,9,8,80,93,75,65,0,1,1,1,0,1,Business Manager
+9,8,7,8,7,6,90,85,88,80,0,0,1,0,1,0,Product Manager
+8,7,8,7,8,7,85,88,85,75,0,1,1,1,0,1,Product Manager
+8,9,8,8,8,7,88,90,90,85,0,0,1,1,1,0,Product Manager
+5,8,8,6,8,8,70,85,68,88,0,0,1,1,0,1,Content Creator
+6,9,9,7,7,6,75,88,72,95,0,0,1,1,0,1,Content Creator
+7,8,9,7,8,7,78,90,75,92,0,0,1,1,1,0,Content Creator
+8,8,8,8,7,6,82,87,80,90,0,0,1,1,0,1,Content Creator
+6,5,8,6,9,8,72,88,70,75,0,1,0,1,0,1,HR Manager
+7,6,9,7,9,9,78,92,75,70,0,1,0,1,0,1,HR Manager
+5,5,10,5,10,9,68,95,65,50,0,1,0,1,0,1,HR Manager
+7,5,9,7,8,8,80,90,78,60,0,1,0,1,0,1,HR Manager
+8,3,7,9,4,5,90,75,92,40,1,0,0,0,1,0,Data Scientist
+9,4,6,9,5,4,95,72,98,45,1,0,0,0,1,0,Data Scientist
+8,5,6,8,6,5,88,78,90,55,1,0,0,0,1,0,Data Scientist
+9,6,7,9,6,5,92,80,95,60,1,0,0,0,1,0,Data Scientist
+10,3,5,10,3,2,98,65,100,30,1,0,0,0,1,0,Data Scientist
+7,8,9,7,8,7,80,90,80,88,0,0,1,1,0,1,UX Designer
+8,9,8,8,7,6,85,88,82,92,0,0,1,1,0,1,UX Designer
+6,9,8,6,8,7,75,87,75,95,0,0,1,1,1,0,UX Designer
+8,7,9,8,8,7,88,92,85,85,0,0,1,1,0,1,UX Designer
+5,4,9,5,8,8,65,90,60,50,0,1,0,1,0,1,Social Media Manager
+6,5,10,6,9,7,70,93,65,55,0,1,0,1,0,1,Social Media Manager
+6,6,9,6,8,7,72,92,68,70,0,1,0,1,1,0,Social Media Manager
+7,7,10,7,9,8,78,95,75,75,0,1,0,1,0,1,Social Media Manager
+10,2,4,10,2,2,98,60,100,20,1,0,0,0,1,0,Systems Architect
+9,3,5,9,4,3,92,65,95,35,1,0,0,0,1,0,Systems Architect
+9,4,6,9,5,4,90,72,92,45,1,0,0,0,1,0,Systems Architect
+8,5,7,8,6,5,85,78,88,55,1,0,0,0,1,0,Systems Architect
+7,5,9,6,8,8,78,88,75,70,0,1,0,1,0,1,Sales Manager
+8,6,10,7,8,8,82,92,78,65,0,1,0,1,0,1,Sales Manager
+6,4,9,5,7,8,70,90,68,50,0,1,0,1,0,1,Sales Manager
+7,5,10,6,9,9,80,95,72,60,0,1,0,1,0,1,Sales Manager
+9,7,6,8,6,5,88,82,90,70,0,0,1,0,1,0,AI/ML Engineer
+8,6,7,8,7,6,85,85,88,65,0,0,1,0,1,1,AI/ML Engineer
+9,5,6,9,5,4,92,78,95,55,1,0,0,0,1,0,AI/ML Engineer
+10,4,5,9,4,3,95,75,98,40,1,0,0,0,1,0,AI/ML Engineer
+6,5,9,6,9,8,70,90,68,75,0,1,0,1,0,1,Project Manager
+7,6,9,7,8,8,78,92,75,70,0,1,0,1,0,1,Project Manager
+6,4,10,5,9,9,68,95,65,60,0,1,0,1,0,1,Project Manager
+7,5,9,6,8,8,75,90,70,65,0,1,0,1,0,1,Project Manager
+9,8,7,8,7,6,88,82,92,85,0,0,1,1,1,0,Digital Marketer
+8,9,8,7,8,7,82,88,85,90,0,1,1,1,0,1,Digital Marketer
+8,7,9,8,8,7,85,90,88,85,0,0,1,1,0,1,Digital Marketer
+7,8,8,7,7,6,78,85,80,88,0,1,0,1,0,1,Digital Marketer
+5,6,9,5,9,8,60,92,55,75,0,1,0,1,0,1,Consultant
+6,7,10,6,10,9,65,95,60,70,0,1,0,1,0,1,Consultant
+6,5,9,6,8,8,68,90,62,72,0,1,0,1,0,1,Consultant
+7,6,10,7,9,8,75,93,70,75,0,1,0,1,0,1,Consultant
+8,3,6,8,3,3,85,70,88,40,1,0,0,0,1,0,Backend Developer
+9,4,5,9,4,3,90,72,92,45,1,0,0,0,1,0,Backend Developer
+8,5,6,8,5,4,88,75,85,50,1,0,0,0,1,0,Backend Developer
+7,4,7,7,5,4,80,78,82,48,1,0,0,0,1,0,Backend Developer
+8,6,8,7,7,6,82,85,85,75,0,1,1,1,0,1,Brand Manager
+7,7,9,7,8,7,78,88,80,82,0,1,0,1,0,1,Brand Manager
+6,5,8,6,8,7,70,85,72,80,0,1,0,1,1,0,Brand Manager
+7,6,9,7,8,8,75,90,78,85,0,1,0,1,0,1,Brand Manager
