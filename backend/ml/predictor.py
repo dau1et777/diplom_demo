@@ -7,7 +7,7 @@ import os
 import joblib
 import logging
 import numpy as np
-import pandas as pd
+# Removed pandas import - use native Python dicts/lists instead
 from typing import Dict, List, Tuple
 
 logger = logging.getLogger(__name__)
@@ -77,12 +77,12 @@ class CareerPredictor:
         if self.model is None:
             raise ValueError("Model not loaded!")
         
-        # Normalize features using DataFrame with proper columns if available
-        if hasattr(self, 'feature_names') and self.feature_names:
-            df = pd.DataFrame([features], columns=self.feature_names)
-            features_scaled = self.scaler.transform(df)
-        else:
+        # Scale features using scaler (works with numpy arrays directly)
+        # Reshape for single sample prediction if needed
+        if len(features.shape) == 1:
             features_scaled = self.scaler.transform([features])
+        else:
+            features_scaled = self.scaler.transform(features)
 
         # Get prediction and probabilities
         prediction = self.model.predict(features_scaled)[0]
@@ -110,12 +110,12 @@ class CareerPredictor:
         if self.model is None:
             raise ValueError("Model not loaded!")
         
-        # Normalize features using DataFrame with the same feature names used in training
-        if hasattr(self, 'feature_names') and self.feature_names:
-            df = pd.DataFrame([features], columns=self.feature_names)
-            features_scaled = self.scaler.transform(df)
-        else:
+        # Scale features using scaler (works with numpy arrays directly)
+        # Reshape for single sample prediction if needed
+        if len(features.shape) == 1:
             features_scaled = self.scaler.transform([features])
+        else:
+            features_scaled = self.scaler.transform(features)
 
         # Get all probabilities from the trained model
         probabilities = self.model.predict_proba(features_scaled)[0]

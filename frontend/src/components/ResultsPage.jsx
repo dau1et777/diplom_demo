@@ -154,7 +154,20 @@ export default function ResultsPage({ onNavigate }) {
     { category: 'Communication', value: results.abilities?.communication || 0 },
     { category: 'Problem Solving', value: results.abilities?.problem_solving || 0 },
     { category: 'Leadership', value: results.abilities?.leadership || 0 },
-  ].filter(item => item.value > 0)
+    { category: 'Teamwork', value: results.abilities?.teamwork || 0 },
+  ]
+
+  const workStyleData = [
+    { category: 'Independent', value: results.abilities?.work_style_independent || 0 },
+    { category: 'Collaborative', value: results.abilities?.work_style_collaborative || 0 },
+  ]
+
+  const interestData = [
+    { category: 'Technology', value: results.abilities?.interest_tech || 0 },
+    { category: 'Business', value: results.abilities?.interest_business || 0 },
+    { category: 'Creative', value: results.abilities?.interest_creativity || 0 },
+    { category: 'Social', value: results.abilities?.interest_social || 0 },
+  ]
 
   const COLORS = ['#6366f1', '#a855f7', '#ec4899', '#f59e0b', '#10b981']
 
@@ -227,7 +240,7 @@ export default function ResultsPage({ onNavigate }) {
                   </span>
                 </div>
                 <div className="flex justify-between items-center pb-3 border-b">
-                  <span className="text-gray-600">Top 5 Careers</span>
+                  <span className="text-gray-600">Total Recommendations</span>
                   <span className="font-bold text-primary">{results.top_recommendations?.length || 0}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -249,9 +262,9 @@ export default function ResultsPage({ onNavigate }) {
         </div>
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Compatibility Chart */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">Top Career Matches</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
@@ -263,11 +276,14 @@ export default function ResultsPage({ onNavigate }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        </div>
 
-          {/* Abilities Radar Chart */}
-          {abilitiesData.length > 0 && (
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Your Abilities Profile</h3>
+        {/* Ability & Work Style Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Abilities Radar Chart - ALWAYS visible */}
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Your Abilities & Capabilities</h3>
+            {abilitiesData.length > 0 ? (
               <ResponsiveContainer width="100%" height={300}>
                 <RadarChart data={abilitiesData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -276,9 +292,45 @@ export default function ResultsPage({ onNavigate }) {
                   <Tooltip />
                 </RadarChart>
               </ResponsiveContainer>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-gray-500">
+                Unable to display ability data
+              </div>
+            )}
+          </div>
+
+          {/* Work Style Chart */}
+          {workStyleData.length > 0 && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Your Work Style Preferences</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={workStyleData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="category" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#f59e0b" name="Preference Level" />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           )}
         </div>
+
+        {/* Interest Chart (uses new interestData) */}
+        {interestData.length > 0 && (
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Your Interest Profile</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={interestData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="category" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#10b981" name="Interest Level" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        )}
 
         {/* All Recommendations */}
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">

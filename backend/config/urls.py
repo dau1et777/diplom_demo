@@ -40,13 +40,15 @@ urlpatterns = [
     path('api/results/recommend/', 
          CareerRecommendationViewSet.as_view({'post': 'generate_recommendations'}),
          name='generate-recommendations'),
-    path('api/results/<str:session_id>/', 
-         CareerRecommendationViewSet.as_view({'get': 'get_recommendations'}),
-         name='get-recommendations'),
+    # save/view endpoints must come before the session_id catch‑all or they will
+    # be misinterpreted as a session identifier (see 405 errors in frontend).
     path('api/results/save-career/', 
          CareerRecommendationViewSet.as_view({'post': 'save_career'}),
          name='save-career'),
     path('api/results/view-career/', 
          CareerRecommendationViewSet.as_view({'post': 'view_career'}),
          name='view-career'),
+    path('api/results/<str:session_id>/', 
+         CareerRecommendationViewSet.as_view({'get': 'get_recommendations'}),
+         name='get-recommendations'),
 ]

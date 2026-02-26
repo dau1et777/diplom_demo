@@ -263,6 +263,11 @@ class CareerInferenceService:
             'teamwork': 0,
             'leadership': 0,
             'academic_performance': 0,
+            # interest breakdown will be added below
+            'interest_tech': 0,
+            'interest_business': 0,
+            'interest_creativity': 0,
+            'interest_social': 0,
         }
         
         # Fetch all questions
@@ -281,6 +286,13 @@ class CareerInferenceService:
             'interests': [],
             'work_style': [],
         }
+        # we'll also track interest details by question order
+        interest_details = {
+            14: [],  # tech
+            15: [],  # business
+            16: [],  # creativity
+            17: [],  # social
+        }
         
         for question_id_str, response_value in quiz_answers.items():
             if question_id_str not in all_questions:
@@ -288,9 +300,12 @@ class CareerInferenceService:
             
             question = all_questions[question_id_str]
             category = question.category
+            order = question.order
             
             if category in category_answers:
                 category_answers[category].append(response_value)
+            if category == 'interests' and order in interest_details:
+                interest_details[order].append(response_value)
         
         # Calculate averages for each ability
         if category_answers['logic']:
@@ -326,5 +341,13 @@ class CareerInferenceService:
                 sum(category_answers['academic']) / len(category_answers['academic']), 1
             )
         
-        logger.info(f"DEBUG: Ability scores: {ability_scores}")
+        # Interest-specific scores
+        def avg_or_default(lst):
+            return round(sum(lst) / len(lst), 1) if lst else 5.0
+        ability_scores['interest_tech'] = avg_or_default(interest_details[14])
+        ability_scores['interest_business'] = avg_or_default(interest_details[15])
+        ability_scores['interest_creativity'] = avg_or_default(interest_details[16])
+        ability_scores['interest_social'] = avg_or_default(interest_details[17])
+        
+        logger.info(f"DEBUG: Ability scores (with interests): {ability_scores}")
         return ability_scores
